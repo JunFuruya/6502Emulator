@@ -3,10 +3,15 @@ package views;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+
+import models.MyRom;
 
 public class MyFrame extends JFrame{
 
 	private static MyFrame frame = new MyFrame();
+
+	private static MyRom rom = new MyRom();
 
 	/**
 	 * コンストラクタ
@@ -50,6 +55,11 @@ public class MyFrame extends JFrame{
 		System.out.println(jMenuBar.getClass());
 
 		JMenu jMenuFile = new JMenu("File");
+
+		JMenuItem menuItem = new JMenuItem("Open");
+		menuItem.addActionListener(new OpenActionListner());
+		jMenuFile.add(menuItem);
+
 		jMenuBar.add(jMenuFile);
 		return jMenuBar;
 	}
