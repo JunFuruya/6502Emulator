@@ -9,5 +9,4 @@ public class Application {
 		frame = MyFrame.getInstance();
 		frame.build();
 	}
-
 }
