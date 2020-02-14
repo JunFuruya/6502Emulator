@@ -7,7 +7,7 @@ import views.EditorPanel;
 import views.MainFrame;
 
 public class MainController extends BaseController {
-	static MainController controller = new MainController();
+	private static MainController controller = new MainController();
 	private MainFrame mainFrame;
 	private EditorPanel editorPanel;
 
@@ -81,13 +81,16 @@ public class MainController extends BaseController {
 	 * ROMの内容を表示する
 	 */
 	public void showBinary() {
-		//try {
-		//	byte[] byteArray = rom.read();
+		byte[] bytes = rom.getBytes();
+		System.out.println(String.format("%02x", bytes[0]));
+		System.out.println(String.format("%02x", bytes[1]));
+		System.out.println(String.format("%02x", bytes[2]));
+		System.out.println(String.format("%02x", bytes[3]));
+		System.out.println(String.format("%02x", bytes[4]));
+		System.out.println(String.format("%02x", bytes[5]));
+		System.out.println(String.format("%02x", bytes[6]));
+		System.out.println(String.format("%02x", bytes[7]));
 
-			this.getEditorPanel().getLabel().setText("変更しました");
-
-		//} catch (IOException ioe) {
-		//	System.out.println(ioe.getMessage());
-		//}
+		this.getEditorPanel().getLabel().setText(rom.getHexNumber());
 	}
 }
