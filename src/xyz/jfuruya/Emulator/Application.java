@@ -1,12 +1,11 @@
 package xyz.jfuruya.Emulator;
-import views.MyFrame;
+import views.MainFrame;
 
 public class Application {
 
-	private static MyFrame frame = null;
+	private static MainFrame frame = null;
 
 	public static void main(String[] args) {
-		frame = MyFrame.getInstance();
-		frame.build();
+		MainFrame.getInstance();
 	}
 }

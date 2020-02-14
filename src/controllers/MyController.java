@@ -2,12 +2,12 @@ package controllers;
 
 import java.io.File;
 
-import models.MyRomFile;
+import models.NesRomFile;
 
-public class MyController {
+public class MyController extends BaseController {
 	static MyController controller = new MyController();
 
-	private static MyRomFile rom;
+	private static NesRomFile rom;
 
 	/**
 	 * コンストラクタ
@@ -26,17 +26,24 @@ public class MyController {
 	}
 
 	/**
+	 *
+	 */
+	public void readRom() {
+		rom.canRead();
+	}
+
+	/**
 	 * ROMファイルをセットする
 	 */
 	public void setRomFile(File romFile) {
 		System.out.println(romFile.getName());
-		rom = new MyRomFile(romFile.getPath());
+		rom = new NesRomFile(romFile.getPath());
 	}
 
 	/**
 	 * ROMファイルを取得する
 	 */
-	public static MyRomFile getRomFIle() {
+	public static NesRomFile getRomFIle() {
 		return rom;
 	}
 }
