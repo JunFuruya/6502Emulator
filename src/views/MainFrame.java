@@ -3,6 +3,7 @@ package views;
 import javax.swing.JFrame;
 
 import builders.FrameBuilder;
+import controllers.MainController;
 
 public class MainFrame extends JFrame{
 
@@ -21,7 +22,7 @@ public class MainFrame extends JFrame{
 	 * インスタンスを取得する
 	 * @return
 	 */
-	public static MainFrame getInstance() {
-		return builder.build(frame);
+	public static MainFrame getInstance(MainController controller) {
+		return builder.build(frame, controller);
 	}
 }

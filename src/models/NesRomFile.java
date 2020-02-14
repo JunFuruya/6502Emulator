@@ -15,7 +15,6 @@ public class NesRomFile extends File {
 	 */
 	public NesRomFile(String pathname) {
 		super(pathname);
-		// TODO 自動生成されたコンストラクター・スタブ
 	}
 
 	/**
@@ -27,7 +26,7 @@ public class NesRomFile extends File {
 		FileInputStream inputStream = new FileInputStream(this);
 		ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 
-		byte[] buffer = new byte[this.BYTE_SIZE];
+		byte[] buffer = new byte[BYTE_SIZE];
 		while(true) {
 			int len = inputStream.read(buffer);
 			if (len < 0) {

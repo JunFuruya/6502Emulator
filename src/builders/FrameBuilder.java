@@ -9,11 +9,14 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 
+import controllers.MainController;
+import views.EditorPanel;
 import views.MainFrame;
 import views.OpenActionListner;
 
 public class FrameBuilder {
 	private static FrameBuilder builder = new FrameBuilder();
+	private static String TITLE = "6502Emulator";
 
 	/**
 	 * private constructor
@@ -36,26 +39,29 @@ public class FrameBuilder {
 	 *
 	 * @return
 	 */
-	public MainFrame build(MainFrame frame) {
+	public MainFrame build(MainFrame frame, MainController controller) {
 		// TODO refactoring
 		Container pane = frame.getContentPane();
 		GridBagLayout layout = new GridBagLayout();
 		pane.setLayout(layout);
 
+		// TODO ゲーム画面用のPanelクラス作成
 		JPanel panel1 = new JPanel();
-		JPanel panel2 = new JPanel();
 		panel1.add(new JLabel("ゲーム用の画面"));
-		panel2.add(new JLabel("bainery editor"));
-
 		pane.add(panel1);
-		pane.add(panel2);
 
-		frame.setJMenuBar(getMyMenuBar());
+		EditorPanel editorPanel = EditorPanel.getInstance();
+		pane.add(editorPanel);
+
+		// 画面パーツ作成時に各パーツへの参照もmainframeに持っておく
+		controller.setEditorPanel(editorPanel);
+		//controller.setGameWindowPanel();
+
+		frame.setJMenuBar(getMyMenuBar(controller));
 		frame.setDefaultCloseOperation(MainFrame.EXIT_ON_CLOSE);
-
-		// FIXME magic number
-		frame.setTitle("6502Emulator");
+		frame.setTitle(TITLE);
 		frame.setBounds(0, 0, 800, 600);
+		// FIXME magic number
 		frame.setVisible(true);
 		return frame;
 	}
@@ -64,14 +70,14 @@ public class FrameBuilder {
 	 * メニューバーを返す
 	 * @return
 	 */
-	private JMenuBar getMyMenuBar() {
+	private JMenuBar getMyMenuBar(MainController controller) {
 		JMenuBar jMenuBar = new JMenuBar();
 		System.out.println(jMenuBar.getClass());
 
 		JMenu jMenuFile = new JMenu("File");
 
 		JMenuItem menuItem = new JMenuItem("Open");
-		menuItem.addActionListener(new OpenActionListner());
+		menuItem.addActionListener(new OpenActionListner(controller));
 		jMenuFile.add(menuItem);
 
 		jMenuBar.add(jMenuFile);
