@@ -2,55 +2,24 @@ package controllers;
 
 import java.io.File;
 
+import entities.FrameComponentEntity;
 import models.NesRomFile;
-import views.EditorPanel;
-import views.MainFrame;
 
 public class MainController extends BaseController {
-	private static MainController controller = new MainController();
-	private MainFrame mainFrame;
-	private EditorPanel editorPanel;
-
+	private static FrameComponentEntity frameComponentEntity;
 	private static NesRomFile rom;
 
 	/**
 	 * コンストラクタ
 	 * private にしてnewできないようにする
 	 */
-	private MainController() {
-
-	}
-
-	/**
-	 * オブジェクト取得
-	 * @return
-	 */
-	public static MainController getInstance() {
-		return controller;
-	}
+	private MainController() { }
 
 	/**
 	 * 処理実行
 	 */
-	public void execute() {
-		mainFrame = MainFrame.getInstance(controller);
-	}
-
-	/**
-	 * Get the editor panel
-	 *
-	 * @param editorPanel
-	 */
-	public void setEditorPanel(EditorPanel editorPanel) {
-		this.editorPanel = editorPanel;
-	}
-
-	/**
-	 * Set an editor panel
-	 * @return
-	 */
-	public EditorPanel getEditorPanel() {
-		return editorPanel;
+	public static void execute() {
+		frameComponentEntity = new FrameComponentEntity();
 	}
 
 	/**
@@ -63,11 +32,8 @@ public class MainController extends BaseController {
 	/**
 	 * ROMファイルをセットする
 	 */
-	public void setRomFile(File romFile) {
-		System.out.println(romFile.getPath());
+	public static void setRomFile(File romFile) {
 		rom = new NesRomFile(romFile.getPath());
-
-		this.showBinary();
 	}
 
 	/**
@@ -80,7 +46,7 @@ public class MainController extends BaseController {
 	/**
 	 * ROMの内容を表示する
 	 */
-	public void showBinary() {
+	public static void showBinary() {
 		byte[] bytes = rom.getBytes();
 		System.out.println(String.format("%02x", bytes[0]));
 		System.out.println(String.format("%02x", bytes[1]));
@@ -91,6 +57,7 @@ public class MainController extends BaseController {
 		System.out.println(String.format("%02x", bytes[6]));
 		System.out.println(String.format("%02x", bytes[7]));
 
-		this.getEditorPanel().getLabel().setText(rom.getHexNumber());
+		frameComponentEntity.getEditorLabel().setText(String.format("%02x", bytes[0]));
+		//((EditorPanel) swingMap.get("editorPanel")).setBinary(rom.getBytes());
 	}
 }

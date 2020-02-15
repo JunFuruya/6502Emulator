@@ -3,22 +3,24 @@ package views;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import controllers.MainController;
-
 public class OpenActionListner implements ActionListener {
-	private MainController controller;
+	private RomFileChooser fileChooser;
 
 	/**
 	 * constructor
 	 *
 	 * @param controller
 	 */
-	public OpenActionListner(MainController controller) {
-		this.controller = controller;
+	public OpenActionListner(RomFileChooser fileChooser) {
+		this.fileChooser = fileChooser;
+	}
+
+	public OpenActionListner() {
+		// TODO 自動生成されたコンストラクター・スタブ
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		new RomFileChooser(controller).getRomFile();
+		fileChooser.getRomFile();
 	}
 }
