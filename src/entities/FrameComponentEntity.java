@@ -1,6 +1,9 @@
 package entities;
 
+import java.awt.Color;
 import java.awt.Container;
+import java.awt.Dimension;
+import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 
 import javax.swing.JFrame;
@@ -9,8 +12,8 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
-import javax.swing.JTextField;
 
 import views.EditorPanel;
 import views.OpenActionListner;
@@ -20,11 +23,20 @@ public class FrameComponentEntity extends BaseEntity {
 	private static String TITLE = "6502Emulator";
 
 	private static JFrame mainFrame = new JFrame();
+	private static Container pane = mainFrame.getContentPane();
 
 	private static JPanel gameWindowPanel = new JPanel();
 	private static JLabel gameWindowLabel = new JLabel("ゲーム用の画面");
+
+	private static JTextArea editorTextArea = new JTextArea();
+	private static JScrollPane editorPane = new JScrollPane(
+			editorTextArea,
+			JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
+			JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 	private static JPanel editorPanel = EditorPanel.getInstance();
-	private static JLabel editorLabel = new JLabel("Editor用の画面"); // TODO 要らないかも
+
+	private static GridBagLayout layout = new GridBagLayout();
+	private static GridBagConstraints constraints = new GridBagConstraints();
 
 	private static JMenuBar menuBar = new JMenuBar();
 	private static JMenu fileMenu = new JMenu("File");
@@ -33,27 +45,28 @@ public class FrameComponentEntity extends BaseEntity {
 	private static RomFileChooser fileChooser = new RomFileChooser();;
 	private static OpenActionListner openActionLitenser;
 
-	private static JTextField jTextFIeld000000000 = new JTextField(); // TODO 要らないかも
-	private static JTextField jTextFIeld000000001 = new JTextField(); // TODO 要らないかも
-	private static JTextField jTextFIeld000000002 = new JTextField(); // TODO 要らないかも
-	private static JTextField jTextFIeld000000003 = new JTextField(); // TODO 要らないかも
-	private static JTextField jTextFIeld000000004 = new JTextField(); // TODO 要らないかも
-
-	private static JTextArea editorTextArea = new JTextArea();
 
 	public FrameComponentEntity() {
-		Container pane = mainFrame.getContentPane();
-		pane.setLayout(new GridBagLayout());
+		constraints.anchor = GridBagConstraints.NORTHWEST;
+		layout.setConstraints(gameWindowPanel, constraints);
+		layout.setConstraints(editorPane, constraints);
+
+		pane.setLayout(layout);
 		pane.add(gameWindowPanel);
 		pane.add(editorPanel);
 
+		gameWindowPanel.setBackground(Color.BLACK);
+		gameWindowPanel.setPreferredSize(new Dimension(300, 400));;
 		gameWindowPanel.add(gameWindowLabel);
-		//editorPanel.add(editorLabel);
-		editorPanel.add(editorTextArea);
+
+		editorPanel.add(editorPane);
+		// FIXME magic number
+		editorTextArea.setColumns(32);
+		editorTextArea.setRows(20);
+		editorTextArea.setLineWrap(true);
 
 		openActionLitenser = new OpenActionListner(fileChooser);
 		openMenuItem.addActionListener(openActionLitenser);
-
 		fileMenu.add(openMenuItem);
 		menuBar.add(fileMenu);
 
@@ -81,10 +94,6 @@ public class FrameComponentEntity extends BaseEntity {
 		return editorPanel;
 	}
 
-	public JLabel getEditorLabel() {
-		return editorLabel;
-	}
-
 	public JMenuBar getMenuBar() {
 		return menuBar;
 	}
@@ -95,26 +104,6 @@ public class FrameComponentEntity extends BaseEntity {
 
 	public JMenuItem getOpenMenuItem() {
 		return openMenuItem;
-	}
-
-	public JTextField getJTextFIeld000000000() {
-		return jTextFIeld000000000;
-	}
-
-	public JTextField getjTextFIeld000000001() {
-		return jTextFIeld000000001;
-	}
-
-	public JTextField getJTextFIeld000000002() {
-		return jTextFIeld000000002;
-	}
-
-	public JTextField getJTextFIeld000000003() {
-		return jTextFIeld000000003;
-	}
-
-	public JTextField getJTextFIeld000000004() {
-		return jTextFIeld000000004;
 	}
 
 	public JTextArea getEditorTextArea() {
