@@ -9,6 +9,8 @@ public class MainController extends BaseController {
 	private static FrameComponentEntity frameComponentEntity;
 	private static NesRomFile rom;
 
+	private static char[] chars = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'};
+
 	/**
 	 * コンストラクタ
 	 * private にしてnewできないようにする
@@ -48,16 +50,15 @@ public class MainController extends BaseController {
 	 */
 	public static void showBinary() {
 		byte[] bytes = rom.getBytes();
-		System.out.println(String.format("%02x", bytes[0]));
-		System.out.println(String.format("%02x", bytes[1]));
-		System.out.println(String.format("%02x", bytes[2]));
-		System.out.println(String.format("%02x", bytes[3]));
-		System.out.println(String.format("%02x", bytes[4]));
-		System.out.println(String.format("%02x", bytes[5]));
-		System.out.println(String.format("%02x", bytes[6]));
-		System.out.println(String.format("%02x", bytes[7]));
 
-		frameComponentEntity.getEditorLabel().setText(String.format("%02x", bytes[0]));
-		//((EditorPanel) swingMap.get("editorPanel")).setBinary(rom.getBytes());
+		StringBuilder builder = new StringBuilder();
+
+		int len = bytes.length;
+		for (int i = 0; i < len; i++) {
+			builder.append(chars[(bytes[i] >>> 4) & 0x0F]); // 符号なし4ビット右シフト（上の桁）
+			builder.append(chars[bytes[i] & 0x0F]); // 下の桁
+		}
+
+		frameComponentEntity.getEditorTextArea().setText(builder.toString());
 	}
 }

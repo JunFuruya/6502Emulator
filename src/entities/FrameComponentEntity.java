@@ -9,6 +9,7 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
 import views.EditorPanel;
@@ -23,7 +24,7 @@ public class FrameComponentEntity extends BaseEntity {
 	private static JPanel gameWindowPanel = new JPanel();
 	private static JLabel gameWindowLabel = new JLabel("ゲーム用の画面");
 	private static JPanel editorPanel = EditorPanel.getInstance();
-	private static JLabel editorLabel = new JLabel("Editor用の画面");
+	private static JLabel editorLabel = new JLabel("Editor用の画面"); // TODO 要らないかも
 
 	private static JMenuBar menuBar = new JMenuBar();
 	private static JMenu fileMenu = new JMenu("File");
@@ -32,11 +33,13 @@ public class FrameComponentEntity extends BaseEntity {
 	private static RomFileChooser fileChooser = new RomFileChooser();;
 	private static OpenActionListner openActionLitenser;
 
-	private static JTextField jTextFIeld000000000 = new JTextField();
-	private static JTextField jTextFIeld000000001 = new JTextField();
-	private static JTextField jTextFIeld000000002 = new JTextField();
-	private static JTextField jTextFIeld000000003 = new JTextField();
-	private static JTextField jTextFIeld000000004 = new JTextField();
+	private static JTextField jTextFIeld000000000 = new JTextField(); // TODO 要らないかも
+	private static JTextField jTextFIeld000000001 = new JTextField(); // TODO 要らないかも
+	private static JTextField jTextFIeld000000002 = new JTextField(); // TODO 要らないかも
+	private static JTextField jTextFIeld000000003 = new JTextField(); // TODO 要らないかも
+	private static JTextField jTextFIeld000000004 = new JTextField(); // TODO 要らないかも
+
+	private static JTextArea editorTextArea = new JTextArea();
 
 	public FrameComponentEntity() {
 		Container pane = mainFrame.getContentPane();
@@ -45,7 +48,8 @@ public class FrameComponentEntity extends BaseEntity {
 		pane.add(editorPanel);
 
 		gameWindowPanel.add(gameWindowLabel);
-		editorPanel.add(editorLabel);
+		//editorPanel.add(editorLabel);
+		editorPanel.add(editorTextArea);
 
 		openActionLitenser = new OpenActionListner(fileChooser);
 		openMenuItem.addActionListener(openActionLitenser);
@@ -111,5 +115,9 @@ public class FrameComponentEntity extends BaseEntity {
 
 	public JTextField getJTextFIeld000000004() {
 		return jTextFIeld000000004;
+	}
+
+	public JTextArea getEditorTextArea() {
+		return editorTextArea;
 	}
 }
