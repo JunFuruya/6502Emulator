@@ -78,35 +78,35 @@ public class FrameComponentEntity extends BaseEntity {
 		mainFrame.setVisible(true);
 	}
 
-	public JFrame getMainFrame() {
+	public static JFrame getMainFrame() {
 		return mainFrame;
 	}
 
-	public JPanel getGameWindowPanel() {
+	public static JPanel getGameWindowPanel() {
 		return gameWindowPanel;
 	}
 
-	public JLabel getGameWindowLabel() {
+	public static JLabel getGameWindowLabel() {
 		return gameWindowLabel;
 	}
 
-	public JPanel getEditorPanel() {
+	public static JPanel getEditorPanel() {
 		return editorPanel;
 	}
 
-	public JMenuBar getMenuBar() {
+	public static JMenuBar getMenuBar() {
 		return menuBar;
 	}
 
-	public JMenu getFileMenu() {
+	public static JMenu getFileMenu() {
 		return fileMenu;
 	}
 
-	public JMenuItem getOpenMenuItem() {
+	public static JMenuItem getOpenMenuItem() {
 		return openMenuItem;
 	}
 
-	public JTextArea getEditorTextArea() {
+	public static JTextArea getEditorTextArea() {
 		return editorTextArea;
 	}
 }
