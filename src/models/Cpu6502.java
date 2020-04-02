@@ -1,5 +1,12 @@
 package models;
 
+/**
+ * Product リコー製 RP2A03（6502カスタム)
+ * Clock 1.79MHz
+ * Memory Space 64KB ($0000 – $FFFF)
+ *
+ * @author Jun Furuya
+ */
 public class Cpu6502 extends BaseCpu{
 	/**
 	 * アキュムレータ
@@ -22,7 +29,13 @@ public class Cpu6502 extends BaseCpu{
 	private byte S;
 
 	/**
-	 * ステータスレジスタ
+	 * ステータスレジスタ NV..DIZC
+	 * N: ネガティブフラグ。値が負(最上位ビットが立っている)なら 1, さもなくば 0
+	 * V: オーバーフローフラグ。符号付きオーバフローが発生したら 1, さもなくば 0
+	 * D: デシマルフラグ。2A03 には decimal mode がないので無意味
+	 * I: IRQ 割り込み禁止フラグ。1 で禁止、0 で許可
+	 * Z: ゼロフラグ。値が 0 なら 1, さもなくば 0
+	 * C: キャリーフラグ。符号なしオーバーフローが発生したら 1, さもなくば 0
 	 */
 	private byte P;
 
@@ -118,7 +131,9 @@ public class Cpu6502 extends BaseCpu{
 	/**
 	 * 算術命令 (A + メモリ + キャリーフラグ) を演算して結果をAへ返します。[N.V.0.0.0.0.Z.C]
 	 */
-	public void ADC() {}
+	public void ADC() {
+
+	}
 
 	/**
 	 * 算術命令 Aとメモリを論理AND演算して結果をAへ返します。[N.0.0.0.0.0.Z.0]

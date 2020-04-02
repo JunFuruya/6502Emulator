@@ -1,13 +1,18 @@
 package controllers;
 
 import java.io.File;
+import java.io.IOException;
 
 import entities.FrameComponentEntity;
+import exceptions.NesFileNotExecutableException;
 import models.NesRomFile;
+import models.ProgramRom;
 
 public class MainController extends BaseController {
 	private static FrameComponentEntity frameComponentEntity;
 	private static NesRomFile rom;
+	private static ProgramRom pregramRom;
+	private static CharactorRom charactorRom;
 
 	private static char[] chars = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'};
 
@@ -35,7 +40,13 @@ public class MainController extends BaseController {
 	 * ROMファイルをセットする
 	 */
 	public static void setRomFile(File romFile) {
-		rom = new NesRomFile(romFile.getPath());
+		try {
+			rom = new NesRomFile(romFile.getPath());
+		} catch (NesFileNotExecutableException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	/**
@@ -59,6 +70,6 @@ public class MainController extends BaseController {
 			builder.append(chars[bytes[i] & 0x0F]); // 下の桁
 		}
 
-		frameComponentEntity.getEditorTextArea().setText(builder.toString());
+		FrameComponentEntity.getEditorTextArea().setText(builder.toString());
 	}
 }
