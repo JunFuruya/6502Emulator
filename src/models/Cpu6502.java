@@ -9,27 +9,27 @@ package models;
  */
 public class Cpu6502 extends BaseCpu{
 	/**
-	 * アキュムレータ
+	 * アキュムレータ 演算用 8bit
 	 */
 	private byte A;
 
 	/**
-	 * インデックスレジスタ（X)
+	 * インデックスレジスタ（X) 配列アクセスやその他雑用 8bit
 	 */
 	private byte X;
 
 	/**
-	 * インデックスレジスタ（Y)
+	 * インデックスレジスタ（Y) 配列アクセスやその他雑用 8bit
 	 */
 	private byte Y;
 
 	/**
-	 * スタックポインタ
+	 * スタックポインタ 8bit
 	 */
 	private byte S;
 
 	/**
-	 * ステータスレジスタ NV..DIZC
+	 * ステータスレジスタ 8bit NV..DIZC
 	 * N: ネガティブフラグ。値が負(最上位ビットが立っている)なら 1, さもなくば 0
 	 * V: オーバーフローフラグ。符号付きオーバフローが発生したら 1, さもなくば 0
 	 * D: デシマルフラグ。2A03 には decimal mode がないので無意味
@@ -40,9 +40,25 @@ public class Cpu6502 extends BaseCpu{
 	private byte P;
 
 	/**
-	 * プラグラムカウンタ
+	 * プラグラムカウンタ 16bit
 	 */
-	private byte[] PC = new byte[1];
+	private short programCounter = 0;
+
+	/**
+	 * リセット
+	 */
+	public void reset() {
+		this.programCounter = 0;
+	}
+
+	/**
+	 * プログラムカウンタの値を取得する
+	 *
+	 * @return プログラムカウンタ
+	 */
+	public short getAddressFromPoagramCounter() {
+		return this.programCounter;
+	}
 
 	/**
 	 * 転送命令 メモリからAにロードします。[N.0.0.0.0.0.Z.0]

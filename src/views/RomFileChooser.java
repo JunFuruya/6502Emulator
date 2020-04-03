@@ -24,8 +24,7 @@ public class RomFileChooser extends JFileChooser{
 	 */
 	public void getRomFile() {
 		if (this.showDialog(button, "開く") == JFileChooser.APPROVE_OPTION ) {
-			MainController.setRomFile(this.getSelectedFile());
-			MainController.showBinary();
+			MainController.startGame(this.getSelectedFile());
 		}
 	}
 }

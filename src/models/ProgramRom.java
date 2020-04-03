@@ -1,13 +1,15 @@
 package models;
 
 public class ProgramRom extends BaseRom {
+	private int programSize = 0;
 
-	public ProgramRom() {
+	private static ProgramRom rom = new ProgramRom();
 
+	protected ProgramRom() {
+		new BaseRom();
 	}
 
-	public ProgramRom(byte[] bytes) {
-		new BaseRom(bytes);
+	public static ProgramRom getInstance() {
+		return rom;
 	}
-
 }

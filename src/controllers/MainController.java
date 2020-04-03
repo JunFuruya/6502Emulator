@@ -1,18 +1,15 @@
 package controllers;
 
 import java.io.File;
-import java.io.IOException;
 
 import entities.FrameComponentEntity;
-import exceptions.NesFileNotExecutableException;
-import models.NesRomFile;
-import models.ProgramRom;
+import models.Cpu6502;
+import models.NesRom;
 
 public class MainController extends BaseController {
 	private static FrameComponentEntity frameComponentEntity;
-	private static NesRomFile rom;
-	private static ProgramRom pregramRom;
-	private static CharactorRom charactorRom;
+	private static NesRom nesRom;
+	private static Cpu6502 cpu = new Cpu6502();
 
 	private static char[] chars = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'};
 
@@ -29,38 +26,23 @@ public class MainController extends BaseController {
 		frameComponentEntity = new FrameComponentEntity();
 	}
 
+	//***************** 以下は Viewから呼び出すメソッド ***************************
 	/**
+	 * ゲームを開始する
 	 *
+	 * @param selectedFile
 	 */
-	public void readRom() {
-		rom.canRead();
-	}
-
-	/**
-	 * ROMファイルをセットする
-	 */
-	public static void setRomFile(File romFile) {
-		try {
-			rom = new NesRomFile(romFile.getPath());
-		} catch (NesFileNotExecutableException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-
-	/**
-	 * ROMファイルを取得する
-	 */
-	public static NesRomFile getRomFIle() {
-		return rom;
+	public static void startGame(File selectedFile) {
+		nesRom = NesRom.getInstance(selectedFile);
+		MainController.showBinary();
+		nesRom.startProgram();
 	}
 
 	/**
 	 * ROMの内容を表示する
 	 */
-	public static void showBinary() {
-		byte[] bytes = rom.getBytes();
+	private static void showBinary() {
+		Integer[] bytes = nesRom.getRomData();
 
 		StringBuilder builder = new StringBuilder();
 
@@ -68,6 +50,10 @@ public class MainController extends BaseController {
 		for (int i = 0; i < len; i++) {
 			builder.append(chars[(bytes[i] >>> 4) & 0x0F]); // 符号なし4ビット右シフト（上の桁）
 			builder.append(chars[bytes[i] & 0x0F]); // 下の桁
+
+			if (i % 16 == 15) {
+				builder.append("\r\n");
+			}
 		}
 
 		FrameComponentEntity.getEditorTextArea().setText(builder.toString());
