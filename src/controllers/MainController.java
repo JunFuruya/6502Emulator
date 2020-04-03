@@ -11,6 +11,7 @@ public class MainController extends BaseController {
 	private static NesRom nesRom;
 	private static Cpu6502 cpu = new Cpu6502();
 
+	// TODO いつか移動する
 	private static char[] chars = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'};
 
 	/**
@@ -34,15 +35,8 @@ public class MainController extends BaseController {
 	 */
 	public static void startGame(File selectedFile) {
 		nesRom = NesRom.getInstance(selectedFile);
-		MainController.showBinary();
-		nesRom.startProgram();
-	}
-
-	/**
-	 * ROMの内容を表示する
-	 */
-	private static void showBinary() {
-		Integer[] bytes = nesRom.getRomData();
+		// ROMの内容を表示する
+		byte[] bytes = nesRom.getRomData();
 
 		StringBuilder builder = new StringBuilder();
 
@@ -57,5 +51,6 @@ public class MainController extends BaseController {
 		}
 
 		FrameComponentEntity.getEditorTextArea().setText(builder.toString());
+		nesRom.execute(cpu);
 	}
 }

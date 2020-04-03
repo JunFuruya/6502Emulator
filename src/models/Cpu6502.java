@@ -40,7 +40,7 @@ public class Cpu6502 extends BaseCpu{
 	private byte P;
 
 	/**
-	 * プラグラムカウンタ 16bit
+	 * プラグラムカウンタ PC 16bit
 	 */
 	private short programCounter = 0;
 

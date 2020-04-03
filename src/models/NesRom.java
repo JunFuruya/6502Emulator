@@ -7,8 +7,11 @@ import controllers.CharactorRom;
 import exceptions.NesFileNotExecutableException;
 
 public class NesRom extends BaseRom {
+	private static NesRom rom;
 	private static NesRomFile romFile;
 	private static final String NES = "NES";
+
+	private static char[] chars = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'};
 
 	/**
 	 * Header (16 bytes)
@@ -18,11 +21,11 @@ public class NesRom extends BaseRom {
 	 * PlayChoice INST-ROM, if present (0 or 8192 bytes)
 	 * PlayChoice PROM, if present (16 bytes Data, 16 bytes CounterOut) (this is often missing, see PC10 ROM-Images for details)
 	 */
-	private short header;
+	private byte[] header = new byte[16];
 
-	private static ProgramRom programRom;
+	private static ProgramRom programRom = ProgramRom.getInstance();
 	private static CharactorRom charactorRom;
-	private Integer[] addressArray;
+	private byte[] romByteData;
 
 	/**
 	 * ミラーリングタイプ
@@ -53,7 +56,7 @@ public class NesRom extends BaseRom {
 	 * @return
 	 */
 	public static NesRom getInstance(File selectedFile) {
-		NesRom rom = new NesRom();
+		rom = new NesRom();
 		rom.setRomFile(selectedFile);
 		rom.load();
 		return rom;
@@ -74,18 +77,18 @@ public class NesRom extends BaseRom {
 	}
 
 	/**
+	 * ファイルを読み込む
 	 * @return
-	 *
 	 */
 	public void load() {
 		byte[] romData = this.romFile.getBytes();
 
 		int size = romData.length / 2;
-		addressArray = new Integer[size];
+		romByteData = new byte[size];
 
 		for(int i = 0; i < size; i++) {
-			addressArray[i] = (romData[i] << 8) + romData[i + 1];
-			System.out.println(addressArray[i]);
+			romByteData[i] = romData[i];
+			//System.out.println(addressArray[i]);
 		}
 	}
 
@@ -93,28 +96,44 @@ public class NesRom extends BaseRom {
 	 * ROMデータを取得する
 	 * @return
 	 */
-	public Integer[] getRomData() {
-		return addressArray;
+	public byte[] getRomData() {
+		return romByteData;
 	}
 
 	/**
 	 * ROMのプログラムを実行する
 	 */
-	public void startProgram() {
+	public void execute(Cpu6502 cpu) {
 		// プログラムカウンタから現在実行中のアドレスを取得する
-		short address = this.cpu.getAddressFromPoagramCounter();
+		short address = cpu.getAddressFromPoagramCounter();
 
-		System.out.println(address);
+		StringBuilder builder = new StringBuilder();
+
+		// 最初の16bitはHeader情報
+		for(int i = 0; i < 16; i++) {
+			this.header[i] = this.romByteData[i];
+			builder.append(this.chars[(romByteData[i] >>> 4) & 0x0F]); // 符号なし4ビット右シフト（上の桁）
+			builder.append(this.chars[romByteData[i] & 0x0F]); // 下の桁
+		}
+
+		System.out.println(builder.toString());
+
+		/**
+		 * 5byte目: プログラム領域のサイズ
+		 *
+		 * 横１行16byte
+		 * 縦 1024行 = 4 * 256 = 4 * 16 * 16 = 4 * [00-FF] = [000-3FF]
+		 *
+		 * zelda の場合は5byte目が「8」-> 2 * [$0000-$FFFF]までがプログラム
+		 */
+		programRom.setSize((int) romByteData[4]);
+
 
 		// ROMカセットから実行するアドレスのデータを取得する。
 		//short romData = ProgramRom.getInstance().read(address);
 
 		// 受け取ったROMデータを実行する。
 		//cpu.execute(romData);
-	}
-
-	private void setHeader() {
-
 	}
 }
 	/**
@@ -123,15 +142,6 @@ public class NesRom extends BaseRom {
 
 
 
-		/**
-		 * 5byte: プログラム領域のサイズ
-		 *
-		 * 横１行16byte
-		 * 縦 1024行 = 4 * 256 = 4 * 16 * 16 = 4 * [00-FF] = [000-3FF]
-		 *
-		 * zelda の場合は5byte目が「8」-> 2 * [$0000-$FFFF]までがプログラム
-		 */
-		//this.programSize = 16 * 1024 * bytes[4];
 
 		/**
 		 * 6byte: グラフィック領域のサイズ
