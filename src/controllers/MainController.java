@@ -4,11 +4,11 @@ import java.io.File;
 
 import entities.FrameComponentEntity;
 import models.Cpu6502;
-import models.NesRom;
+import models.NesRomCartridge;
 
 public class MainController extends BaseController {
 	private static FrameComponentEntity frameComponentEntity;
-	private static NesRom nesRom;
+	private static NesRomCartridge nesRom;
 	private static Cpu6502 cpu = new Cpu6502();
 
 	// TODO いつか移動する
@@ -34,7 +34,7 @@ public class MainController extends BaseController {
 	 * @param selectedFile
 	 */
 	public static void startGame(File selectedFile) {
-		nesRom = NesRom.getInstance(selectedFile);
+		nesRom = NesRomCartridge.getInstance(selectedFile);
 		// ROMの内容を表示する
 		byte[] bytes = nesRom.getRomData();
 
