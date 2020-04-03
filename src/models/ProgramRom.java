@@ -1,9 +1,13 @@
 package models;
 
+import java.util.Arrays;
+
 public class ProgramRom extends BaseRom {
 	private static int programSize = 0;
 
 	private static ProgramRom rom = new ProgramRom();
+
+	private byte[] programData;
 
 	protected ProgramRom() {
 		new BaseRom();
@@ -24,7 +28,37 @@ public class ProgramRom extends BaseRom {
 	 * @param num
 	 */
 	public void setSize(int num) {
-		this.programSize = 16 * 1024 * num;
-		System.out.println(this.programSize);
+		programSize = 16 * 1024 * num;
+		System.out.println(programSize);
+	}
+
+	/**
+	 * プログラムデータをセットする
+	 *
+	 * @param programData
+	 */
+	public void setProgram(byte[] programData) {
+		this.programData = programData;
+		System.out.println(this.programData[this.programSize - 1]);
+	}
+
+	/**
+	 * プログラムデータを取得する
+	 *
+	 * @return
+	 */
+	public int getSize() {
+		return programSize;
+	}
+
+	/**
+	 * 指定した番号（アドレス）のデータを取得する。
+	 *
+	 * @param num
+	 * @return
+	 */
+	public byte[] getProgramData(int num) {
+		int from = num * 16 + 1;
+		return Arrays.copyOfRange(this.programData, num, from + 16);
 	}
 }

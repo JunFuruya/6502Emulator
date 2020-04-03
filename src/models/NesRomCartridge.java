@@ -2,6 +2,7 @@ package models;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
 
 import exceptions.NesFileNotExecutableException;
 
@@ -103,7 +104,7 @@ public class NesRomCartridge extends BaseCartridge {
 	 */
 	public void execute(Cpu6502 cpu) {
 		// プログラムカウンタから現在実行中のアドレスを取得する
-		short address = cpu.getAddressFromPoagramCounter();
+		byte address = cpu.getAddressFromPoagramCounter();
 
 		StringBuilder builder = new StringBuilder();
 
@@ -122,7 +123,7 @@ public class NesRomCartridge extends BaseCartridge {
 		programRom.setSize((int) romByteData[4]);
 
 		/**
-		 * 6byte: グラフィック領域のサイズ
+		 * 6byte目: グラフィック領域のサイズ
 		 */
 		try {
 			graphicRom.setSize((int) romByteData[5]);
@@ -141,10 +142,13 @@ public class NesRomCartridge extends BaseCartridge {
 		 *       bit 4-7   Four lower bits of ROM Mapper Type
 		 * The 6502 is little endian
 		 */
-		//mirroringType           = (bytes[6] % 2 == 0) ? HORIZONTAL_MIRRORING : VERTICAL_MIRROROING;
-		//hasBatteryBackedRam     = ((bytes[6] >>> 1) % 2 == 0) ? false : true;
-		//hasTrainer              = ((bytes[6] >>> 2) % 2 == 0) ? false : true;
-		//hasFourScreenVramLayout = ((bytes[6] >>> 3) % 2 == 0) ? false : true;
+		this.mirroringType           = (romByteData[6] % 2 == 0) ? HORIZONTAL_MIRRORING : VERTICAL_MIRROROING;
+		this.hasBatteryBackedRam     = ((romByteData[6] >>> 1) % 2 == 0) ? false : true;
+		this.hasTrainer              = ((romByteData[6] >>> 2) % 2 == 0) ? false : true;
+		this.hasFourScreenVramLayout = ((romByteData[6] >>> 3) % 2 == 0) ? false : true;
+
+		System.out.println(mirroringType);
+		System.out.println(hasTrainer);
 
 		/**
 		 * 8byte bit 0-3   Reserved, must be zeroes!
@@ -161,7 +165,7 @@ public class NesRomCartridge extends BaseCartridge {
 		 *       2　- 74HC161/74HC32			Simple ROM switch     Castlevania, LifeForce, many games hacked for use with FFE copier
 		 *       3　- VROM Switch				Simple ROM switch     Castlevania, LifeForce, many games hacked for use with FFE copier
 		 *       4　- MMC3						Nintendo MMC3         SilverSurfer, SuperContra, Immortal, etc.
-		 *       5　- MMC5						Nintendo MMC5     Castlevania3
+		 *       5　- MMC5						Nintendo MMC5         Castlevania3
 		 *       6　- F4xxx(FFE)				FFE F4xxx             F4xxx games off FFE CDROM
 		 *       7　- ROM Switch				32kB ROM switch       WizardsAndWarriors, Solstice, etc.
 		 *       8　- F3xxx(FFE)				FFE F3xxx             F3xxx games off FFE CDROM
@@ -185,11 +189,18 @@ public class NesRomCartridge extends BaseCartridge {
 		 * ８－１５　　　　　　予約済み
 		 */
 
-		// ROMカセットから実行するアドレスのデータを取得する。
-		//short romData = ProgramRom.getInstance().read(address);
+		// Trainer がある場合は、512byte分進めて
+		int from = 0;
+		if (this.hasTrainer) {
+			// 8byte は header
+			from = from + 512;
+		}
+		this.programRom.setProgram(Arrays.copyOfRange(romByteData, from, from + programRom.getSize()));
 
+		// Header の処理が終わったので、次の行に進む。
+		cpu.setAddress(1);
 		// 受け取ったROMデータを実行する。
-		//cpu.execute(romData);
+		cpu.execute(ProgramRom.getInstance());
 	}
 }
 

@@ -1,5 +1,7 @@
 package models;
 
+import helpers.ByteHelper;
+
 /**
  * Product リコー製 RP2A03（6502カスタム)
  * Clock 1.79MHz
@@ -37,12 +39,12 @@ public class Cpu6502 extends BaseCpu{
 	 * Z: ゼロフラグ。値が 0 なら 1, さもなくば 0
 	 * C: キャリーフラグ。符号なしオーバーフローが発生したら 1, さもなくば 0
 	 */
-	private byte P;
+	private byte P = (byte) 0;;
 
 	/**
 	 * プラグラムカウンタ PC 16bit
 	 */
-	private short programCounter = 0;
+	private byte programCounter = 0;
 
 	/**
 	 * リセット
@@ -56,7 +58,7 @@ public class Cpu6502 extends BaseCpu{
 	 *
 	 * @return プログラムカウンタ
 	 */
-	public short getAddressFromPoagramCounter() {
+	public byte getAddressFromPoagramCounter() {
 		return this.programCounter;
 	}
 
@@ -330,7 +332,9 @@ public class Cpu6502 extends BaseCpu{
 	/**
 	 * フラグ変更命令 BCDモードから通常モードに戻ります。ファミコンでは実装されていません。[0.0.0.0.D.0.0.0]
 	 */
-	public void CLD() {}
+	public void CLD() {
+		this.P = (byte) (this.P & 0x08);
+	}
 
 	/**
 	 * フラグ変更命令 IRQ割り込みを許可します。[0.0.0.0.0.I.0.0]
@@ -355,7 +359,9 @@ public class Cpu6502 extends BaseCpu{
 	/**
 	 * フラグ変更命令 IRQ割り込みを禁止します。[0.0.0.0.0.I.0.0]
 	 */
-	public void SEI() {}
+	public void SEI() {
+		P = (byte) (P & 0x04);
+	}
 
 	/**
 	 * その他の命令 ソフトウェア割り込みを起こします。[0.0.0.B.0.0.0.0]
@@ -366,4 +372,53 @@ public class Cpu6502 extends BaseCpu{
 	 * その他の命令 空の命令を実行します。[0.0.0.0.0.0.0.0]
 	 */
 	public void NOP() {}
+
+	/**
+	 * プログラム実行
+	 * @param rom
+	 */
+	public void execute(ProgramRom rom) {
+
+		// TODO 無限ループにする
+		for (int i = 0; i < 3; i++) {
+			byte byteData[] = rom.getProgramData(this.programCounter);
+
+			if(ByteHelper.isSame(byteData, "78")) {
+				this.SEI(); // IRQ 割り込み禁止
+				// プログラムカウンタ、カウントアップ
+				this.addAddress(1);
+
+			} else if (ByteHelper.isSame(byteData, "A9")) {
+				// プログラムカウンタをカウントアップして、次の値を取得する。
+				this.addAddress(1);
+
+				// 何らかの方法でイミディエイトデータ（オペランドで操作するデータ）を取得する
+
+				//this.LDA();
+
+			} else if (ByteHelper.isSame(byteData, "D8")) {
+				this.CLD(); // CLD 通常モード
+				// プログラムカウンタ、カウントアップ
+				this.addAddress(1);
+			}
+
+			System.out.println(this.programCounter);
+		}
+	}
+
+	/**
+	 * アドレスを進める
+	 * @param num
+	 */
+	private void addAddress(int num) {
+		this.programCounter = (byte) (this.programCounter + (num * 8));
+	}
+
+	/**
+	 * 指定したアドレス番号をセットする
+	 * @param num
+	 */
+	public void setAddress(int num) {
+		this.programCounter = (byte) (num * 8);
+	}
 }
