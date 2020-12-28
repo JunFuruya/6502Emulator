@@ -6,6 +6,7 @@ import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
@@ -18,6 +19,7 @@ import javax.swing.JTextArea;
 import views.EditorPanel;
 import views.OpenActionListner;
 import views.RomFileChooser;
+import views.SoundActionListener;
 
 public class FrameComponentEntity extends BaseEntity {
 	private static String TITLE = "6502Emulator";
@@ -45,6 +47,8 @@ public class FrameComponentEntity extends BaseEntity {
 	private static RomFileChooser fileChooser = new RomFileChooser();;
 	private static OpenActionListner openActionLitenser;
 
+	private static JButton soundButton = new JButton("sound");
+	private static SoundActionListener soundActionListener = new SoundActionListener();
 
 	public FrameComponentEntity() {
 		constraints.anchor = GridBagConstraints.NORTHWEST;
@@ -54,6 +58,9 @@ public class FrameComponentEntity extends BaseEntity {
 		pane.setLayout(layout);
 		pane.add(gameWindowPanel);
 		pane.add(editorPanel);
+
+		soundButton.addActionListener(soundActionListener);
+		pane.add(soundButton);
 
 		gameWindowPanel.setBackground(Color.BLACK);
 		gameWindowPanel.setPreferredSize(new Dimension(300, 400));;
