@@ -11,6 +11,8 @@ public class NesRomFile extends File {
 	private byte[] bytes;
 	private byte[] headerBytes = new byte[16];
 	private static final String NES = "NES";
+	private int prgRomBankNum = 0; //PRGロムバンク数
+	private int chrRomBankNum = 0; //CHRロムバンク数
 
 	private static char[] chars = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'};
 
@@ -42,6 +44,13 @@ public class NesRomFile extends File {
 
 		// header情報
 		headerBytes = Arrays.copyOfRange(bytes, 0, 16); // 16byteまでがHeader
+		System.out.println(convertByteToHexString(Arrays.copyOfRange(headerBytes, 0, 3)));
+		//PRGロムバンク数
+		prgRomBankNum = (int) headerBytes[4];
+		System.out.println(prgRomBankNum);
+		//CHRロムバンク数
+		chrRomBankNum = (int) headerBytes[5];
+		System.out.println(chrRomBankNum);
 	}
 
 	/**
