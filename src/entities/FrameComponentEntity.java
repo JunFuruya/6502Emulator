@@ -2,9 +2,9 @@ package entities;
 
 import java.awt.Color;
 import java.awt.Container;
-import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.Insets;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -37,6 +37,8 @@ public class FrameComponentEntity extends BaseEntity {
 			JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 	private static JPanel editorPanel = EditorPanel.getInstance();
 
+	private static JPanel infoPanel = new JPanel();
+
 	private static GridBagLayout layout = new GridBagLayout();
 	private static GridBagConstraints constraints = new GridBagConstraints();
 
@@ -54,23 +56,34 @@ public class FrameComponentEntity extends BaseEntity {
 	// FIXME リファクタ ここまで
 
 	public FrameComponentEntity() {
-		constraints.anchor = GridBagConstraints.NORTHWEST;
-		layout.setConstraints(gameWindowPanel, constraints);
-		layout.setConstraints(editorPane, constraints);
-
 		pane.setLayout(layout);
 		pane.add(gameWindowPanel);
 		pane.add(editorPanel);
 
+		// レイアウト
+		// x=0, y=0, width=2, height=3
+		GridBagConstraints gameWindowConstraints = new GridBagConstraints(0, 0, 2, 3, 1.0, 1.0,
+				GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0);
+		pane.add(gameWindowPanel, gameWindowConstraints);
+		// x=2, y=0, width=1, height=1
+		GridBagConstraints infoConstraints = new GridBagConstraints(2, 0, 1, 1, 1.0, 1.0,
+				GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0);
+		pane.add(infoPanel, infoConstraints);
+		// x=2, y=1, width=1, height=2
+		GridBagConstraints editorConstraints = new GridBagConstraints(2, 1, 1, 2, 1.0, 1.0,
+				GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0);
+		pane.add(editorPanel, editorConstraints);
+
 		// FIXME リファクタ ここから
 		soundButton.addActionListener(soundActionListener);
-		pane.add(soundButton);
+		infoPanel.add(soundButton);
 		headerLabel.setText("Header:");
-		pane.add(headerLabel);
+		//headerLabel.setPreferredSize(new Dimension(200, 100));
+		infoPanel.add(headerLabel);
 		// FIXME リファクタ ここまで
 
 		gameWindowPanel.setBackground(Color.BLACK);
-		gameWindowPanel.setPreferredSize(new Dimension(300, 400));;
+		//gameWindowPanel.setPreferredSize(new Dimension(300, 400));
 		gameWindowPanel.add(gameWindowLabel);
 
 		editorPanel.add(editorPane);
