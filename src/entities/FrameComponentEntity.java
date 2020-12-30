@@ -88,7 +88,7 @@ public class FrameComponentEntity extends BaseEntity {
 		mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		mainFrame.setTitle(TITLE);
 		// FIXME magic number
-		mainFrame.setBounds(0, 0, 800, 600);
+		mainFrame.setBounds(0, 0, 1000, 800);
 		mainFrame.setVisible(true);
 	}
 
@@ -130,5 +130,12 @@ public class FrameComponentEntity extends BaseEntity {
 	 */
 	public void setTextToEditor(String text) {
 		editorTextArea.setText(text);
+	}
+
+	/**
+	 * Header表示ラベルにテキストをセットする
+	 */
+	public void setHeaderText(String text) {
+		headerLabel.setText("Header: " + text);
 	}
 }

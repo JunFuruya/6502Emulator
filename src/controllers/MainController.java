@@ -39,14 +39,15 @@ public class MainController extends BaseController {
 	/**
 	 * ROMファイルを取得する
 	 */
-	public static NesRomFile getRomFIle() {
+	public static NesRomFile getRomFile() {
 		return rom;
 	}
 
 	/**
 	 * ROMの内容を表示する
 	 */
-	public static void showBinary() {
-		frameComponentEntity.setTextToEditor(rom.convertByteToString(rom.getBytes()));
+	public static void showRomContent() {
+		frameComponentEntity.setTextToEditor(rom.getRomByteHexString());
+		frameComponentEntity.setHeaderText(rom.getHeaderHexString());
 	}
 }
