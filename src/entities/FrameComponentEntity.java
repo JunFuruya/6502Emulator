@@ -47,8 +47,11 @@ public class FrameComponentEntity extends BaseEntity {
 	private static RomFileChooser fileChooser = new RomFileChooser();;
 	private static OpenActionListner openActionLitenser;
 
+	// FIXME リファクタ ここから
 	private static JButton soundButton = new JButton("sound");
 	private static SoundActionListener soundActionListener = new SoundActionListener();
+	private static JLabel headerLabel = new JLabel();
+	// FIXME リファクタ ここまで
 
 	public FrameComponentEntity() {
 		constraints.anchor = GridBagConstraints.NORTHWEST;
@@ -59,8 +62,12 @@ public class FrameComponentEntity extends BaseEntity {
 		pane.add(gameWindowPanel);
 		pane.add(editorPanel);
 
+		// FIXME リファクタ ここから
 		soundButton.addActionListener(soundActionListener);
 		pane.add(soundButton);
+		headerLabel.setText("Header:");
+		pane.add(headerLabel);
+		// FIXME リファクタ ここまで
 
 		gameWindowPanel.setBackground(Color.BLACK);
 		gameWindowPanel.setPreferredSize(new Dimension(300, 400));;
