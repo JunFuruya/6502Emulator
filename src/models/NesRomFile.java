@@ -1,12 +1,13 @@
 package models;
 
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
 
-public class NesRomFile extends File {
+import exceptions.NesFileNotExecutableException;
+
+public class NesRomFile extends RomFile {
 	private String filepath;
 	private byte[] bytes;
 	private byte[] headerBytes = new byte[16];
@@ -19,10 +20,13 @@ public class NesRomFile extends File {
 	/**
 	 * コンストラクタ
 	 * @param pathname
+	 * @throws NesFileNotExecutableException
+	 * @throws IOException
 	 */
-	public NesRomFile(String pathname) {
+	public NesRomFile(String pathname) throws NesFileNotExecutableException, IOException {
 		super(pathname);
 		filepath = pathname;
+
 		try {
 			read();
 		} catch (IOException ioe) {
@@ -36,7 +40,7 @@ public class NesRomFile extends File {
 	 * @return
 	 * @throws IOException
 	 */
-	private void read() throws IOException {
+	protected void read() throws IOException {
 		InputStream inputStream = new FileInputStream(filepath);
 		byte[] bytes = inputStream.readAllBytes();
 		inputStream.close();
@@ -111,5 +115,13 @@ public class NesRomFile extends File {
 		//builder.append("15/n");
 		//builder.append("16/n");
 		return builder.toString();
+	}
+
+	/**
+	 * プログラムデータを取得する
+	 * @return
+	 */
+	public byte[] getByteProgram() {
+		return Arrays.copyOfRange(bytes, 16, prgRomBankNum * 16 * 1024 + 16); // 16kb * バンク数 + Header
 	}
 }

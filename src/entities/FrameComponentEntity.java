@@ -28,6 +28,8 @@ public class FrameComponentEntity extends BaseEntity {
 	private static Container pane = mainFrame.getContentPane();
 
 	private static JPanel gameWindowPanel = new JPanel();
+	// ファミコンの画面サイズは 256 x 240 ピクセル
+
 	private static JLabel gameWindowLabel = new JLabel("ゲーム用の画面");
 
 	private static JTextArea editorTextArea = new JTextArea();
@@ -35,12 +37,11 @@ public class FrameComponentEntity extends BaseEntity {
 			editorTextArea,
 			JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
 			JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-	private static JPanel editorPanel = EditorPanel.getInstance();
-
+	private static JPanel editorPanel = new EditorPanel();
+	private static JLabel addressLabel = new JLabel();
 	private static JPanel infoPanel = new JPanel();
 
 	private static GridBagLayout layout = new GridBagLayout();
-	private static GridBagConstraints constraints = new GridBagConstraints();
 
 	private static JMenuBar menuBar = new JMenuBar();
 	private static JMenu fileMenu = new JMenu("File");
@@ -58,6 +59,7 @@ public class FrameComponentEntity extends BaseEntity {
 	public FrameComponentEntity() {
 		pane.setLayout(layout);
 		pane.add(gameWindowPanel);
+		editorPanel.add(addressLabel);
 		pane.add(editorPanel);
 
 		// レイアウト
@@ -105,35 +107,35 @@ public class FrameComponentEntity extends BaseEntity {
 		mainFrame.setVisible(true);
 	}
 
-	public JFrame getMainFrame() {
+	public static JFrame getMainFrame() {
 		return mainFrame;
 	}
 
-	public JPanel getGameWindowPanel() {
+	public static JPanel getGameWindowPanel() {
 		return gameWindowPanel;
 	}
 
-	public JLabel getGameWindowLabel() {
+	public static JLabel getGameWindowLabel() {
 		return gameWindowLabel;
 	}
 
-	public JPanel getEditorPanel() {
+	public static JPanel getEditorPanel() {
 		return editorPanel;
 	}
 
-	public JMenuBar getMenuBar() {
+	public static JMenuBar getMenuBar() {
 		return menuBar;
 	}
 
-	public JMenu getFileMenu() {
+	public static JMenu getFileMenu() {
 		return fileMenu;
 	}
 
-	public JMenuItem getOpenMenuItem() {
+	public static JMenuItem getOpenMenuItem() {
 		return openMenuItem;
 	}
 
-	public JTextArea getEditorTextArea() {
+	public static JTextArea getEditorTextArea() {
 		return editorTextArea;
 	}
 

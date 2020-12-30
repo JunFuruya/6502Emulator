@@ -1,12 +1,18 @@
 package controllers;
 
 import java.io.File;
+import java.io.IOException;
 
 import entities.FrameComponentEntity;
+import exceptions.NesFileNotExecutableException;
+import models.Cpu6502;
+import models.NesRomCartridge;
 import models.NesRomFile;
 
 public class MainController extends BaseController {
 	private static FrameComponentEntity frameComponentEntity;
+	private static NesRomCartridge nesRom;
+	private static Cpu6502 cpu = new Cpu6502();
 	private static NesRomFile rom;
 
 	/**
@@ -22,6 +28,7 @@ public class MainController extends BaseController {
 		frameComponentEntity = new FrameComponentEntity();
 	}
 
+	//***************** 以下は Viewから呼び出すメソッド ***************************
 	/**
 	 * ROM の内容を読みオム
 	 */
@@ -33,7 +40,13 @@ public class MainController extends BaseController {
 	 * ROMファイルをセットする
 	 */
 	public static void setRomFile(File romFile) {
-		rom = new NesRomFile(romFile.getPath());
+		try {
+			rom = new NesRomFile(romFile.getPath());
+			// ROM からプログラムデータを取得する
+			cpu.setProgram(rom.getByteProgram());
+		} catch (NesFileNotExecutableException | IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	/**
