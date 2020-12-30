@@ -3,12 +3,15 @@ package controllers;
 import java.io.File;
 
 import entities.FrameComponentEntity;
-import models.NesRomFile;
+import models.Cpu6502;
+import models.NesRomCartridge;
 
 public class MainController extends BaseController {
 	private static FrameComponentEntity frameComponentEntity;
-	private static NesRomFile rom;
+	private static NesRomCartridge nesRom;
+	private static Cpu6502 cpu = new Cpu6502();
 
+	// TODO いつか移動する
 	private static char[] chars = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'};
 
 	/**
@@ -24,32 +27,16 @@ public class MainController extends BaseController {
 		frameComponentEntity = new FrameComponentEntity();
 	}
 
+	//***************** 以下は Viewから呼び出すメソッド ***************************
 	/**
+	 * ゲームを開始する
 	 *
+	 * @param selectedFile
 	 */
-	public void readRom() {
-		rom.canRead();
-	}
-
-	/**
-	 * ROMファイルをセットする
-	 */
-	public static void setRomFile(File romFile) {
-		rom = new NesRomFile(romFile.getPath());
-	}
-
-	/**
-	 * ROMファイルを取得する
-	 */
-	public static NesRomFile getRomFIle() {
-		return rom;
-	}
-
-	/**
-	 * ROMの内容を表示する
-	 */
-	public static void showBinary() {
-		byte[] bytes = rom.getBytes();
+	public static void startGame(File selectedFile) {
+		nesRom = NesRomCartridge.getInstance(selectedFile);
+		// ROMの内容を表示する
+		byte[] bytes = nesRom.getRomData();
 
 		StringBuilder builder = new StringBuilder();
 
@@ -57,8 +44,13 @@ public class MainController extends BaseController {
 		for (int i = 0; i < len; i++) {
 			builder.append(chars[(bytes[i] >>> 4) & 0x0F]); // 符号なし4ビット右シフト（上の桁）
 			builder.append(chars[bytes[i] & 0x0F]); // 下の桁
+
+			if (i % 16 == 15) {
+				builder.append("\r\n");
+			}
 		}
 
-		frameComponentEntity.getEditorTextArea().setText(builder.toString());
+		FrameComponentEntity.getEditorTextArea().setText(builder.toString());
+		nesRom.execute(cpu);
 	}
 }
