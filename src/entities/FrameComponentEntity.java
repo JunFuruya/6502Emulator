@@ -123,4 +123,12 @@ public class FrameComponentEntity extends BaseEntity {
 	public JTextArea getEditorTextArea() {
 		return editorTextArea;
 	}
+
+	/**
+	 * エディタにテキストを表示する
+	 * @param text
+	 */
+	public void setTextToEditor(String text) {
+		editorTextArea.setText(text);
+	}
 }

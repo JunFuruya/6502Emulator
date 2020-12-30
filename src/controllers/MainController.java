@@ -9,8 +9,6 @@ public class MainController extends BaseController {
 	private static FrameComponentEntity frameComponentEntity;
 	private static NesRomFile rom;
 
-	private static char[] chars = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'};
-
 	/**
 	 * コンストラクタ
 	 * private にしてnewできないようにする
@@ -25,7 +23,7 @@ public class MainController extends BaseController {
 	}
 
 	/**
-	 *
+	 * ROM の内容を読みオム
 	 */
 	public void readRom() {
 		rom.canRead();
@@ -49,16 +47,6 @@ public class MainController extends BaseController {
 	 * ROMの内容を表示する
 	 */
 	public static void showBinary() {
-		byte[] bytes = rom.getBytes();
-
-		StringBuilder builder = new StringBuilder();
-
-		int len = bytes.length;
-		for (int i = 0; i < len; i++) {
-			builder.append(chars[(bytes[i] >>> 4) & 0x0F]); // 符号なし4ビット右シフト（上の桁）
-			builder.append(chars[bytes[i] & 0x0F]); // 下の桁
-		}
-
-		frameComponentEntity.getEditorTextArea().setText(builder.toString());
+		frameComponentEntity.setTextToEditor(rom.convertByteToString(rom.getBytes()));
 	}
 }
