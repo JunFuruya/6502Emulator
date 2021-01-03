@@ -5,7 +5,10 @@ import javax.sound.sampled.DataLine;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.SourceDataLine;
 
-public class SquareSound extends BaseSound {
+public class TriangleSound extends BaseSound {
+    //double t = 1.0 / format.getSampleRate();
+    double delta_t = 0;
+
 	@Override
 	public void sound(double herz) {
     	// 音声波形データ格納用のバッファを作成
@@ -25,7 +28,7 @@ public class SquareSound extends BaseSound {
 			// 新しい音階の波形データをバッファに書き込み
 			for(int i=0 ; i<buffer.length ; i++) {
 				// サンプル1つ分の値を書き込み
-				buffer[i] = convertSquareWave(herz);
+				buffer[i] = convertTraiangleWave(herz);
 			}
 
 			line.write(buffer, 0, buffer.length); // 0 から readBytes まで音声データを再生する
@@ -38,12 +41,13 @@ public class SquareSound extends BaseSound {
 	}
 
 	/**
-	 * sin 波に変換
+	 * 三角波に変換
 	 * @return
 	 */
-	private byte convertSquareWave(double herz) {
-		radian = radian + 2.0 * Math.PI * herz / format.getSampleRate();
-		radian = Math.toRadians(Math.toDegrees(radian));
-		return (byte) (amplitude * Math.sin(radian));
+	private byte convertTraiangleWave(double herz) {
+		delta_t += herz / format.getSampleRate();
+		double x = delta_t - Math.floor(delta_t);
+		double point = (x < 0.25) ? x * 4.0 : (x < 0.75) ? (0.5 - x) * 4.0 : (x - 1.0) * 4.0;
+		return (byte) (point * amplitude);
 	}
 }

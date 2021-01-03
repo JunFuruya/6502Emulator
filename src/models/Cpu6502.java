@@ -11,6 +11,16 @@ import helpers.ByteHelper;
  */
 public class Cpu6502 extends BaseCpu{
 	/**
+	 * clock 周波数
+	 */
+	private int herz = 1790000;
+
+	/**
+	 * Nes の場合、APU は CPU と一体になっている
+	 */
+	private APU apu = new APU(herz);
+
+	/**
 	 * アキュムレータ 演算用 8bit
 	 */
 	private byte A;
@@ -390,11 +400,11 @@ public class Cpu6502 extends BaseCpu{
 			if(ByteHelper.isSame(programByte, "78")) {
 				this.SEI(); // IRQ 割り込み禁止
 				// プログラムカウンタ、カウントアップ
-				this.addAddress(1);
+				//this.addAddress(1);
 
 			} else if (ByteHelper.isSame(programByte, "A9")) {
 				// プログラムカウンタをカウントアップして、次の値を取得する。
-				this.addAddress(1);
+				//this.addAddress(1);
 
 				// 何らかの方法でイミディエイトデータ（オペランドで操作するデータ）を取得する
 
@@ -403,7 +413,7 @@ public class Cpu6502 extends BaseCpu{
 			} else if (ByteHelper.isSame(programByte, "D8")) {
 				this.CLD(); // CLD 通常モード
 				// プログラムカウンタ、カウントアップ
-				this.addAddress(1);
+				//this.addAddress(1);
 			}
 
 			//System.out.println(this.programCounter);
