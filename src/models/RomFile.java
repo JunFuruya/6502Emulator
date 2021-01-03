@@ -13,8 +13,8 @@ public class RomFile extends File {
 
 	public RomFile(String pathname) throws IOException, NesFileNotExecutableException {
 		super(pathname);
-		filepath = pathname;
-		read();
+		//filepath = pathname;
+		//read();
 	}
 
 	/**

@@ -1,18 +1,19 @@
 package controllers;
 
 import java.io.File;
+import java.io.IOException;
 
 import entities.FrameComponentEntity;
+import exceptions.NesFileNotExecutableException;
 import models.Cpu6502;
 import models.NesRomCartridge;
+import models.NesRomFile;
 
 public class MainController extends BaseController {
 	private static FrameComponentEntity frameComponentEntity;
 	private static NesRomCartridge nesRom;
 	private static Cpu6502 cpu = new Cpu6502();
-
-	// TODO いつか移動する
-	private static char[] chars = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'};
+	private static NesRomFile rom;
 
 	/**
 	 * コンストラクタ
@@ -29,28 +30,37 @@ public class MainController extends BaseController {
 
 	//***************** 以下は Viewから呼び出すメソッド ***************************
 	/**
-	 * ゲームを開始する
-	 *
-	 * @param selectedFile
+	 * ROM の内容を読みオム
 	 */
-	public static void startGame(File selectedFile) {
-		nesRom = NesRomCartridge.getInstance(selectedFile);
-		// ROMの内容を表示する
-		byte[] bytes = nesRom.getRomData();
+	public void readRom() {
+		rom.canRead();
+	}
 
-		StringBuilder builder = new StringBuilder();
-
-		int len = bytes.length;
-		for (int i = 0; i < len; i++) {
-			builder.append(chars[(bytes[i] >>> 4) & 0x0F]); // 符号なし4ビット右シフト（上の桁）
-			builder.append(chars[bytes[i] & 0x0F]); // 下の桁
-
-			if (i % 16 == 15) {
-				builder.append("\r\n");
-			}
+	/**
+	 * ROMファイルをセットする
+	 */
+	public static void setRomFile(File romFile) {
+		try {
+			rom = new NesRomFile(romFile.getPath());
+			// ROM からプログラムデータを取得する
+			cpu.setProgram(rom.getByteProgram());
+		} catch (NesFileNotExecutableException | IOException e) {
+			e.printStackTrace();
 		}
+	}
 
-		FrameComponentEntity.getEditorTextArea().setText(builder.toString());
-		nesRom.execute(cpu);
+	/**
+	 * ROMファイルを取得する
+	 */
+	public static NesRomFile getRomFile() {
+		return rom;
+	}
+
+	/**
+	 * ROMの内容を表示する
+	 */
+	public static void showRomContent() {
+		frameComponentEntity.setTextToEditor(rom.getRomByteHexString());
+		frameComponentEntity.setHeaderText(rom.getHeaderHexString());
 	}
 }

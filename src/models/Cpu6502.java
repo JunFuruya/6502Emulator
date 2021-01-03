@@ -11,6 +11,16 @@ import helpers.ByteHelper;
  */
 public class Cpu6502 extends BaseCpu{
 	/**
+	 * clock 周波数
+	 */
+	private int herz = 1790000;
+
+	/**
+	 * Nes の場合、APU は CPU と一体になっている
+	 */
+	private APU apu = new APU(herz);
+
+	/**
 	 * アキュムレータ 演算用 8bit
 	 */
 	private byte A;
@@ -44,23 +54,27 @@ public class Cpu6502 extends BaseCpu{
 	/**
 	 * プラグラムカウンタ PC 16bit
 	 */
-	private byte programCounter = 0;
+	//private byte programCounter = 0;
 
+	/**
+	 * プログラムデータの byte 配列
+	 */
+	private byte[] programByte;
 	/**
 	 * リセット
 	 */
-	public void reset() {
-		this.programCounter = 0;
-	}
+	//public void reset() {
+	//	this.programCounter = 0;
+	//}
 
 	/**
 	 * プログラムカウンタの値を取得する
 	 *
 	 * @return プログラムカウンタ
 	 */
-	public byte getAddressFromPoagramCounter() {
-		return this.programCounter;
-	}
+	//public byte getAddressFromPoagramCounter() {
+	//	return this.programCounter;
+	//}
 
 	/**
 	 * 転送命令 メモリからAにロードします。[N.0.0.0.0.0.Z.0]
@@ -381,28 +395,28 @@ public class Cpu6502 extends BaseCpu{
 
 		// TODO 無限ループにする
 		for (int i = 0; i < 3; i++) {
-			byte byteData[] = rom.getProgramData(this.programCounter);
+			//byte byteData[] = rom.getProgramData(this.programCounter);
 
-			if(ByteHelper.isSame(byteData, "78")) {
+			if(ByteHelper.isSame(programByte, "78")) {
 				this.SEI(); // IRQ 割り込み禁止
 				// プログラムカウンタ、カウントアップ
-				this.addAddress(1);
+				//this.addAddress(1);
 
-			} else if (ByteHelper.isSame(byteData, "A9")) {
+			} else if (ByteHelper.isSame(programByte, "A9")) {
 				// プログラムカウンタをカウントアップして、次の値を取得する。
-				this.addAddress(1);
+				//this.addAddress(1);
 
 				// 何らかの方法でイミディエイトデータ（オペランドで操作するデータ）を取得する
 
 				//this.LDA();
 
-			} else if (ByteHelper.isSame(byteData, "D8")) {
+			} else if (ByteHelper.isSame(programByte, "D8")) {
 				this.CLD(); // CLD 通常モード
 				// プログラムカウンタ、カウントアップ
-				this.addAddress(1);
+				//this.addAddress(1);
 			}
 
-			System.out.println(this.programCounter);
+			//System.out.println(this.programCounter);
 		}
 	}
 
@@ -410,15 +424,23 @@ public class Cpu6502 extends BaseCpu{
 	 * アドレスを進める
 	 * @param num
 	 */
-	private void addAddress(int num) {
-		this.programCounter = (byte) (this.programCounter + (num * 8));
-	}
+	//private void addAddress(int num) {
+		//this.programCounter = (byte) (this.programCounter + (num * 8));
+	//}
 
 	/**
 	 * 指定したアドレス番号をセットする
 	 * @param num
 	 */
-	public void setAddress(int num) {
-		this.programCounter = (byte) (num * 8);
+	//public void setAddress(int num) {
+		//this.programCounter = (byte) (num * 8);
+	//}
+
+	/**
+	 * プログラムデータを取得する
+	 * @param bytes
+	 */
+	public void setProgram(byte[] bytes) {
+		this.programByte = bytes;
 	}
 }
